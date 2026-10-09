@@ -1,0 +1,35 @@
+<Window x:Class="LeetCodeTrainer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{Binding Title}"
+        Width="1280" Height="760" MinWidth="980" MinHeight="620"
+        WindowStartupLocation="CenterScreen"
+        Background="#F8FAFC">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="190"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 左侧导航 -->
+        <Border Grid.Column="0" Background="#1E293B">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top">
+                    <TextBlock Text="LeetCode 训练器" FontSize="18" FontWeight="Bold" Foreground="White" Margin="16,20,8,2"/>
+                    <TextBlock Text="Python 本地刷题训练" FontSize="11" Foreground="#94A3B8" Margin="16,0,8,16"/>
+                </StackPanel>
+                <StackPanel>
+                    <RadioButton Content="题目列表" Style="{StaticResource NavRadioStyle}" GroupName="nav"
+                                 IsChecked="True" Command="{Binding ShowListCommand}"/>
+                    <RadioButton Content="学习统计" Style="{StaticResource NavRadioStyle}" GroupName="nav"
+                                 Command="{Binding ShowStatsCommand}"/>
+                    <RadioButton Content="设置" Style="{StaticResource NavRadioStyle}" GroupName="nav"
+                                 Command="{Binding ShowSettingsCommand}"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- 右侧页面容器：DataTemplate 按 CurrentViewModel 类型自动切换 -->
+        <ContentControl Grid.Column="1" Content="{Binding CurrentViewModel}"/>
+    </Grid>
+</Window>

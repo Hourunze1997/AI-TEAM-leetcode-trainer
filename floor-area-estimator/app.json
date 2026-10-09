@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "floor-area-estimator",
+    "slug": "floor-area-estimator",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "需要访问相册以选择户型图",
+        "NSCameraUsageDescription": "需要使用相机拍摄户型图"
+      }
+    },
+    "android": {
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "需要访问相册以选择户型图",
+          "cameraPermission": "需要使用相机拍摄户型图"
+        }
+      ]
+    ]
+  }
+}

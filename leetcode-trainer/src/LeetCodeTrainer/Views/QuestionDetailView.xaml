@@ -1,0 +1,90 @@
+<UserControl x:Class="LeetCodeTrainer.Views.QuestionDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:LeetCodeTrainer.Views.Controls">
+    <Grid Margin="12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 左列：题面 -->
+        <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" ClipToBounds="True">
+            <controls:BindableWebBrowser Html="{Binding Html}"/>
+        </Border>
+
+        <!-- 右列：标题 / 编辑器 / 按钮 / 用例结果 -->
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="60*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="40*" MinHeight="140"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="{Binding TitleText}" FontSize="18" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
+                <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                    <TextBlock Text="{Binding Difficulty}" FontWeight="SemiBold"
+                               Foreground="{Binding Difficulty, Converter={StaticResource DifficultyToBrush}}"/>
+                    <TextBlock Text="{Binding AcceptanceText}" Margin="12,0,0,0" Foreground="{StaticResource MutedBrush}"/>
+                    <TextBlock Text="{Binding StatusText}" Margin="12,0,0,0" FontWeight="SemiBold"
+                               Foreground="{StaticResource PrimaryBrush}"/>
+                </StackPanel>
+                <ProgressBar Height="4" Margin="0,6,0,0" Minimum="0" Maximum="100" Value="{Binding AcceptanceRate}"/>
+            </StackPanel>
+
+            <Border Grid.Row="1" Margin="0,10,0,0" BorderBrush="#CBD5E1" BorderThickness="1"
+                    CornerRadius="6" Background="White" ClipToBounds="True">
+                <controls:PythonTextEditor Text="{Binding EditorText, UpdateSourceTrigger=PropertyChanged}"/>
+            </Border>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10,0,0">
+                <Button Content="运行测试" Style="{StaticResource PrimaryButtonStyle}"
+                        Command="{Binding RunTestsCommand}" IsEnabled="{Binding CanRun}"/>
+                <Button Content="标记已解决" Command="{Binding MarkSolvedCommand}" Margin="8,0,0,0"/>
+                <Button Content="标记待重做" Command="{Binding ResetToAttemptedCommand}" Margin="8,0,0,0"/>
+                <Button Command="{Binding ToggleFavoriteCommand}" Margin="8,0,0,0" FontWeight="Bold"
+                        Content="{Binding Favorite, Converter={StaticResource FavoriteToStar}}"
+                        Foreground="{Binding Favorite, Converter={StaticResource FavoriteToBrushColor}}"/>
+                <Button Content="返回列表" Command="{Binding BackCommand}" Margin="8,0,0,0"/>
+                <TextBlock Text="{Binding PassedText}" Margin="12,0,0,0" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            </StackPanel>
+
+            <ScrollViewer Grid.Row="3" Margin="0,10,0,0" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding CaseResults}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,0,0,6" Padding="8" Background="#FAFBFC"
+                                    BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="4"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Margin="0,0,8,0" CornerRadius="2"
+                                            Background="{Binding Passed, Converter={StaticResource PassedToBrush}}"/>
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock FontWeight="SemiBold" Text="{Binding Index, StringFormat=用例 {0}}"/>
+                                        <TextBlock Text="{Binding Input, StringFormat=输入: {0}}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        <TextBlock Text="{Binding Expected, StringFormat=期望: {0}}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        <TextBlock Text="{Binding Actual, StringFormat=实际: {0}}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        <TextBlock Text="{Binding ElapsedMs, StringFormat=耗时: {0:0.0} ms}"
+                                                   Margin="0,2,0,0" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+                                        <TextBlock Text="{Binding Error}" TextWrapping="Wrap" Margin="0,4,0,0"
+                                                   Foreground="#DC2626" FontSize="11"
+                                                   Visibility="{Binding Error, Converter={StaticResource EmptyToCollapsed}}"/>
+                                        <TextBlock Text="{Binding Stdout, StringFormat=输出: {0}}" TextWrapping="Wrap"
+                                                   Margin="0,2,0,0" FontSize="11" Foreground="#475569"
+                                                   Visibility="{Binding Stdout, Converter={StaticResource EmptyToCollapsed}}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

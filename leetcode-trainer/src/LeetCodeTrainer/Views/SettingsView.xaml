@@ -1,0 +1,59 @@
+<UserControl x:Class="LeetCodeTrainer.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="20">
+        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8"
+                Padding="20" MaxWidth="680" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="110"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Python 路径" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="0" Grid.Column="1"
+                         Text="{Binding PythonPath, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+                <Button Grid.Row="0" Grid.Column="2" Content="浏览…" Command="{Binding BrowsePythonCommand}" Margin="8,0,0,0"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="代理地址" VerticalAlignment="Center" Margin="0,12,0,0"/>
+                <Grid Grid.Row="1" Grid.Column="1" Margin="0,12,0,0">
+                    <TextBox Text="{Binding ProxyUrl, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="http://127.0.0.1:7890（可选）" Foreground="#94A3B8" Margin="8,0,0,0"
+                               VerticalAlignment="Center" IsHitTestVisible="False">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ProxyUrl}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="数据源" VerticalAlignment="Center" Margin="0,12,0,0"/>
+                <ComboBox Grid.Row="2" Grid.Column="1" Margin="0,12,0,0" Width="180" HorizontalAlignment="Left"
+                          ItemsSource="{Binding SiteOptions}" SelectedItem="{Binding SelectedSite}"/>
+
+                <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,16,0,0">
+                    <Button Content="保存设置" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
+                    <Button Content="清空缓存与运行记录" Command="{Binding ClearCacheCommand}"
+                            Style="{StaticResource DangerButtonStyle}" Margin="10,0,0,0"/>
+                </StackPanel>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding StatusText}"
+                           Margin="0,14,0,0" Foreground="#16A34A" TextWrapping="Wrap"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

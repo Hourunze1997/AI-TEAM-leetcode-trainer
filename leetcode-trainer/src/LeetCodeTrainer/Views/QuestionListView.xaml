@@ -1,0 +1,103 @@
+<UserControl x:Class="LeetCodeTrainer.Views.QuestionListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 顶部工具栏 -->
+        <Border Grid.Row="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Content="同步题库" Style="{StaticResource PrimaryButtonStyle}"
+                        Command="{Binding SyncCommand}"
+                        IsEnabled="{Binding IsSyncing, Converter={StaticResource InverseBool}}"/>
+                <TextBlock Grid.Column="1" Margin="10,0" VerticalAlignment="Center"
+                           Text="{Binding SyncStatusText}" TextTrimming="CharacterEllipsis"
+                           Foreground="{StaticResource MutedBrush}"/>
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,0,10,0"
+                           Text="{Binding TotalCount, StringFormat={}{0} 题}"
+                           Foreground="{StaticResource MutedBrush}"/>
+                <TextBox Grid.Column="3" Width="170" VerticalAlignment="Center"
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
+                    </TextBox.InputBindings>
+                </TextBox>
+                <ComboBox Grid.Column="4" Width="100" Margin="8,0,0,0" VerticalAlignment="Center"
+                          ItemsSource="{Binding DifficultyOptions}" SelectedItem="{Binding SelectedDifficulty}"/>
+                <ComboBox Grid.Column="5" Width="130" Margin="8,0,0,0" VerticalAlignment="Center"
+                          ItemsSource="{Binding Tags}" SelectedItem="{Binding SelectedTag}"/>
+                <ComboBox Grid.Column="6" Width="100" Margin="8,0,0,0" VerticalAlignment="Center"
+                          ItemsSource="{Binding StatusOptions}" SelectedItem="{Binding SelectedStatus}"/>
+                <CheckBox Grid.Column="7" Content="隐藏会员题" Margin="10,0,0,0" VerticalAlignment="Center"
+                          IsChecked="{Binding HidePaid}"/>
+            </Grid>
+        </Border>
+
+        <!-- 题目列表：双击行打开详情 -->
+        <DataGrid Grid.Row="1" Margin="0,10,0,0"
+                  ItemsSource="{Binding Questions}"
+                  MouseDoubleClick="QuestionsGrid_MouseDoubleClick">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="#" Binding="{Binding FrontendId}" Width="56"/>
+                <DataGridTextColumn Header="题目" Binding="{Binding Title}" Width="*"/>
+                <DataGridTextColumn Header="难度" Binding="{Binding Difficulty}" Width="90">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{Binding Difficulty, Converter={StaticResource DifficultyToBrush}}"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="通过率" Binding="{Binding AcceptanceRate, StringFormat={}{0:0.0}%}" Width="90">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="状态" Binding="{Binding Status, Converter={StaticResource StatusToText}}" Width="90">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTemplateColumn Header="收藏" Width="70">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ToggleButton HorizontalAlignment="Center" Cursor="Hand"
+                                          Content="{Binding Favorite, Converter={StaticResource FavoriteToStar}}"
+                                          Foreground="{Binding Favorite, Converter={StaticResource FavoriteToBrushColor}}"
+                                          IsChecked="{Binding Favorite, Mode=OneWay}"
+                                          Command="{Binding DataContext.ToggleFavoriteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                          CommandParameter="{Binding}">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <TextBlock Text="{TemplateBinding Content}"
+                                                   Foreground="{TemplateBinding Foreground}"
+                                                   FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
